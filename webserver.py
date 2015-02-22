@@ -44,7 +44,26 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += "<html><body>"
                 items = session.query(Restaurant).all()
                 for item in items:
-                    output += "<p>{}</p>".format(item.name)
+                    output += '<p>{}'.format(item.name)
+                    output += '</br>'
+                    output += '<a href="#">Edit</a></br>'
+                    output += '<a href="#">Delete</a></br>'
+                    output += '</p>'
+                output += "</body><html>"
+                self.wfile.write(output)
+                print output
+                return
+
+            if self.path.endswith('/restaurants/new'):
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                output = ""
+                output += "<html><body>"
+                #
+                output += "<h1>New restaurant name?</h1>"
+                output += '''<form method='POST' enctype='multipart/form-data' action='/restaurants'><input name="name" type="text" ><input type="submit" value="Submit"> </form>'''
+                #
                 output += "</body><html>"
                 self.wfile.write(output)
                 print output

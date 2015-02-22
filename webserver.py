@@ -42,6 +42,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 output = ""
                 output += "<html><body>"
+                output += 'Create a new restaurant <a href="/restaurants/new">here</a>'
                 items = session.query(Restaurant).all()
                 for item in items:
                     output += '<p>{}'.format(item.name)

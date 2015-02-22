@@ -6,6 +6,18 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
 
+def post_response_wrapper(s, content):
+    s.send_response(301)
+    s.end_headers()
+    output = ""
+    output += "<html><body>"
+    output += content
+    output += "</body></html>"
+    s.wfile.write(output)
+    print output
+    return
+
+
 def get_response_wrapper(s, content):
     s.send_response(200)
     s.send_header('Content-type', 'text/html')
@@ -27,7 +39,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                 content = "<h1>Hello friends!</h1>"
                 get_response_wrapper(self, content)
                 return
-            
+
             if self.path.endswith("/hola"):
                 content = '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
                 get_response_wrapper(self, content)
@@ -62,8 +74,8 @@ class webServerHandler(BaseHTTPRequestHandler):
                                     .filter_by(id=restaurant_id)[0]
                 output = '<h1>{}</h1>'.format(restaurant.name)
                 output += '''<form method='POST' enctype='multipart/form-data' \
-                action='/editrestaurant'><input name="new_restaurant_name" \
-                type="text"><input type="submit" value="Submit"></form>'''
+                action='/restaurants/{}/edit'><input name="new_restaurant_name" \
+                type="text"><input type="submit" value="Submit"></form>'''.format(restaurant_id)
                 get_response_wrapper(self, output)
                 return
                 
@@ -92,7 +104,25 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += "</body></html>"
                 self.wfile.write(output)
                 print output
-                            
+                
+            if self.path.endswith('/edit'):
+                restaurant_id = self.path.split('/')[2]
+                restaurant = session.query(Restaurant)\
+                                    .filter_by(id=restaurant_id)[0]
+                ctype, pdict = cgi.parse_header(self.headers.getheader
+                                                ('content-type'))
+                if ctype == 'multipart/form-data':
+                    fields = cgi.parse_multipart(self.rfile, pdict)
+                    new_restaurant_name = fields.get("new_restaurant_name")[0]
+                restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+                restaurant.name = new_restaurant_name
+                session.add(restaurant)
+                session.commit()
+                output = "<p>Restaurant has been modified</p>"
+                output += '<a href="/restaurants">BACK</a>'
+                post_response_wrapper(self, output)
+                return
+
             else:
                 self.send_response(301)
                 self.end_headers()

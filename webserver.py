@@ -8,7 +8,6 @@ from database_setup import Base, Restaurant, MenuItem
 
 class webServerHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        # global session
         try:
             if self.path.endswith("/hello"):
                 self.send_response(200)

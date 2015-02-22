@@ -85,15 +85,12 @@ class webServerHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             if self.path.endswith("/newrestaurant"):
-                self.send_response(301)
-                self.end_headers()
                 ctype, pdict = cgi.parse_header(self.headers.getheader
                                                 ('content-type'))
                 if ctype == 'multipart/form-data':
                     fields = cgi.parse_multipart(self.rfile, pdict)
                     new_restaurant_name = fields.get("new_restaurant_name")[0]
                 output = ""
-                output += "<html><body>"
                 # create and commit new restaurant object to db
                 new_restaurant = Restaurant(name=new_restaurant_name)
                 session.add(new_restaurant)
@@ -101,9 +98,8 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += "{} has been successfully added to the list.\
                 </br>".format(new_restaurant_name)
                 output += '<a href="/restaurants">BACK</href>'
-                output += "</body></html>"
-                self.wfile.write(output)
-                print output
+                post_response_wrapper(self, output)
+                return
                 
             if self.path.endswith('/edit'):
                 restaurant_id = self.path.split('/')[2]
@@ -124,8 +120,6 @@ class webServerHandler(BaseHTTPRequestHandler):
                 return
 
             else:
-                self.send_response(301)
-                self.end_headers()
                 ctype, pdict = cgi.parse_header(self.headers.getheader
                                                 ('content-type'))
                 if ctype == 'multipart/form-data':
@@ -136,9 +130,8 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += " <h2> Okay, how about this: </h2>"
                 output += "<h1> %s </h1>" % messagecontent[0]
                 output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-                output += "</html></body>"
-                self.wfile.write(output)
-                print output
+                post_response_wrapper(self, output)
+                return
 
         except:
             pass

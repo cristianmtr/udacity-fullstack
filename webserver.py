@@ -6,42 +6,35 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
 
+def get_response_wrapper(s, content):
+    s.send_response(200)
+    s.send_header('Content-type', 'text/html')
+    s.end_headers()
+    output = ""
+    output += "<html><body>"
+    output += content
+    output += "</body></html>"
+    s.wfile.write(output)
+    print output
+    return
+
+
 class webServerHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
-            if self.path.endswith("/hello"):
-                self.send_response(200)
-                self.send_header('Content-type', 'text/html')
-                self.end_headers()
-                output = ""
-                output += "<html><body>"
-                output += "<h1>Hello friends!</h1>"
-                output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-                output += "</body></html>"
-                self.wfile.write(output)
-                print output
-                return
 
+            if self.path.endswith('/hello'):
+                content = "<h1>Hello friends!</h1>"
+                get_response_wrapper(self, content)
+                return
+            
             if self.path.endswith("/hola"):
-                self.send_response(200)
-                self.send_header('Content-type', 'text/html')
-                self.end_headers()
-                output = ""
-                output += "<html><body>"
-                output += "<h1>&#161 Hola !</h1>"
-                output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-                output += "</body></html>"
-                self.wfile.write(output)
-                print output
+                content = '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
+                get_response_wrapper(self, content)
                 return
 
             if self.path.endswith('/restaurants'):
-                self.send_response(200)
-                self.send_header('Content-type', 'text/html')
-                self.end_headers()
-                output = ""
-                output += "<html><body>"
-                output += 'Create a new restaurant \
+                output = 'Create a new restaurant \
                 <a href="/restaurants/new">here</a>'
                 items = session.query(Restaurant).all()
                 for item in items:
@@ -51,41 +44,27 @@ class webServerHandler(BaseHTTPRequestHandler):
                         .format(item.id)
                     output += '<a href="#">Delete</a></br>'
                     output += '</p>'
-                output += "</body><html>"
-                self.wfile.write(output)
-                print output
+                get_response_wrapper(self, output)
                 return
 
             if self.path.endswith('/restaurants/new'):
-                self.send_response(200)
-                self.send_header('Content-type', 'text/html')
-                self.end_headers()
-                output = ""
-                output += "<html><body>"
-                #
-                output += "<h1>New restaurant name?</h1>"
+                output = "<h1>New restaurant name?</h1>"
                 output += '''<form method='POST' enctype='multipart/form-data'\
                 action='/newrestaurant'><input name="new_restaurant_name" \
                 type="text" ><input type="submit" value="Submit"> </form>'''
                 #
-                output += "</body><html>"
-                self.wfile.write(output)
-                print output
+                get_response_wrapper(self, output)
                 return
 
             if self.path.endswith('/edit'):
                 restaurant_id = self.path.split('/')[2]
                 restaurant = session.query(Restaurant)\
                                     .filter_by(id=restaurant_id)[0]
-                output = "<html><body>"
-                output += '<h1>{}</h1>'.format(restaurant.name)
+                output = '<h1>{}</h1>'.format(restaurant.name)
                 output += '''<form method='POST' enctype='multipart/form-data' \
                 action='/editrestaurant'><input name="new_restaurant_name" \
                 type="text"><input type="submit" value="Submit"></form>'''
-                output += "</body></html>"
-                print output
-                self.wfile.write(output)
-                print output
+                get_response_wrapper(self, output)
                 return
                 
         except IOError:

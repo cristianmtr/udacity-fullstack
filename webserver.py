@@ -100,7 +100,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += '<a href="/restaurants">BACK</href>'
                 post_response_wrapper(self, output)
                 return
-                
+
             if self.path.endswith('/edit'):
                 restaurant_id = self.path.split('/')[2]
                 restaurant = session.query(Restaurant)\

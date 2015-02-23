@@ -41,7 +41,10 @@ class webServerHandler(BaseHTTPRequestHandler):
                 return
 
             if self.path.endswith("/hola"):
-                content = '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
+                content = '''<form method='POST' enctype='multipart/form-data'\
+                action='/hello'><h2>What would you like me to say?</h2><input \
+                name="message" type="text" ><input type="submit" \
+                value="Submit"> </form>'''
                 get_response_wrapper(self, content)
                 return
 
@@ -54,7 +57,8 @@ class webServerHandler(BaseHTTPRequestHandler):
                     output += '</br>'
                     output += '<a href="/restaurants/{}/edit">Edit</a></br>'\
                         .format(item.id)
-                    output += '<a href="#">Delete</a></br>'
+                    output += '<a href="/restaurants/{}/delete">Delete</a>\
+                    </br>'.format(item.id)
                     output += '</p>'
                 get_response_wrapper(self, output)
                 return
@@ -74,11 +78,24 @@ class webServerHandler(BaseHTTPRequestHandler):
                                     .filter_by(id=restaurant_id)[0]
                 output = '<h1>{}</h1>'.format(restaurant.name)
                 output += '''<form method='POST' enctype='multipart/form-data' \
-                action='/restaurants/{}/edit'><input name="new_restaurant_name" \
-                type="text"><input type="submit" value="Submit"></form>'''.format(restaurant_id)
+                action='/restaurants/{}/edit'><input name="new_restaurant_name"
+                type="text"><input type="submit" value="Submit"></form>\
+                '''.format(restaurant_id)
                 get_response_wrapper(self, output)
                 return
-                
+
+            if self.path.endswith('/delete'):
+                restaurant_id = self.path.split('/')[2]
+                restaurant = session.query(Restaurant).\
+                    filter_by(id=restaurant_id).one()
+                output = '<h1>Delete restaurant {}?</h1>'.\
+                         format(restaurant.name)
+                output += '''<form method='POST' enctype='multipart/form-data'\
+                action='/restaurants/{}/delete'><input type="submit" \
+                value="Yes"> </form>'''.format(restaurant.id)
+                get_response_wrapper(self, output)
+                return
+
         except IOError:
                 self.send_error(404, 'File Not Found: %s' % self.path)
 
@@ -116,6 +133,16 @@ class webServerHandler(BaseHTTPRequestHandler):
                 session.commit()
                 output = "<p>Restaurant has been modified</p>"
                 output += '<a href="/restaurants">BACK</a>'
+                post_response_wrapper(self, output)
+                return
+
+            if self.path.endswith('/delete'):
+                restaurant_id = self.path.split('/')[2]
+                restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+                output = "<h1>Restaurant '{}' has been deleted.</h1>".format(restaurant.name)
+                output += "<a href='/restaurants'>BACK</a>"
+                session.delete(restaurant)
+                session.commit()
                 post_response_wrapper(self, output)
                 return
 

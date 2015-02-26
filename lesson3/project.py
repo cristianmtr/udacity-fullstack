@@ -122,6 +122,16 @@ def restaurantMenu(restaurant_id):
     return output
 
 
+@app.route('/restaurants/')
+def listOfRestaurants():
+    restaurants = session.query(Restaurant)
+    output = '<h1>Restaurants</h1></br>'
+    for i in restaurants:
+        output += '''<a href='/restaurants/{}/'>{}</a></br>'''\
+            .format(i.id, i.name)
+    return output
+
+
 @app.route('/')
 @app.route('/hello')
 def HelloWorld():

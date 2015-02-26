@@ -38,9 +38,41 @@ def newMenuItem(restaurant_id):
 
 
 # Task 2: Create route for editMenuItem function here
-@app.route('/restaurants/<int:restaurant_id>/<int:menuitem_id>/')
+@app.route('/restaurants/<int:restaurant_id>/<int:menuitem_id>/',
+           methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, menuitem_id):
-    return "page to edit a menu item. Task 2 complete!"
+    if request.method == 'GET':
+        thisMenuItem = session.query(MenuItem).filter_by(id=menuitem_id).one()
+        output = '''<form method='POST' enctype='multipar/form-data'\
+        action='/restaurants/{}/{}/'><h1>Prepare your dish!\
+        </h1>'''.format(restaurant_id, menuitem_id)
+        output += "<strong>Name</strong></br>"
+        output += '''<input name="name" value="{}" type='text'></br>'''\
+            .format(thisMenuItem.name)
+        output += "<strong>Description</strong></br>"
+        output += '''<input name="description" value="{}" type='text'></br>'''\
+            .format(thisMenuItem.description)
+        output += "<strong>Course</strong></br>"
+        output += '''<input name="course" type='text' value="{}"></br>'''\
+            .format(thisMenuItem.course)
+        output += "<strong>Price</strong></br>"
+        output += '''<input name="price" type='text' value="{}"></br>'''\
+            .format(thisMenuItem.price)
+        output += '''<input type='submit' value='Edit'></br>'''
+        output += '''<a href="/restaurants/{}">Back</a>'''.format(restaurant_id)
+        return output
+    elif request.method == 'POST':
+        thisMenuItem = session.query(MenuItem).filter_by(id=menuitem_id).one()
+        thisMenuItem.name = request.form['name']
+        thisMenuItem.description = request.form['description']
+        thisMenuItem.course = request.form['course']
+        thisMenuItem.price = request.form['price']
+        session.add(thisMenuItem)
+        session.commit()
+        output = '''<h1>Your menu item has been edited!</h1>'''
+        output += '''Go <a href='/restaurants/{}/'>back</a>'''.\
+                  format(restaurant_id)
+        return output
 
 
 # Task 3: Create a route for deleteMenuItem function here

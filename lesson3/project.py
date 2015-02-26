@@ -76,9 +76,27 @@ def editMenuItem(restaurant_id, menuitem_id):
 
 
 # Task 3: Create a route for deleteMenuItem function here
-@app.route('/restaurants/<int:restaurant_id>/<int:menuitem_id>/delete/')
+@app.route('/restaurants/<int:restaurant_id>/<int:menuitem_id>/delete/',
+           methods=['POST', 'GET'])
 def deleteMenuItem(restaurant_id, menuitem_id):
-    return "page to delete a menu item. Task 3 complete!"
+    if request.method == 'GET':
+        item_name = session.query(MenuItem).filter_by(id=menuitem_id)\
+                                           .one().name
+        output = '''<form method='POST' enctype='multipart/form-data'\
+        action='/restaurants/{}/{}/delete/'>'''\
+            .format(restaurant_id, menuitem_id)
+        output += '''<h1>OK to delete item {}?</h1>'''.format(item_name)
+        output += '''<input type='submit' value='Submit'></br>'''
+        return output
+    elif request.method == 'POST':
+        thisMenuItem = session.query(MenuItem)\
+                              .filter_by(id=menuitem_id).one()
+        session.delete(thisMenuItem)
+        session.commit()
+        output = '''<h1>Item has been deleted</h1></br>'''
+        output += '''Go <a href='/restaurants/{}/'>Back</a>'''\
+            .format(restaurant_id)
+        return output
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
@@ -93,7 +111,9 @@ def restaurantMenu(restaurant_id):
         output += "{}</br>".format(item.description)
         output += "Price: {}</br>".format(item.price)
         # link to edit menu item page
-        output += "<a href='/restaurants/{}/{}/'>Edit</a></br>"\
+        output += "<a href='/restaurants/{}/{}/'>Edit</a>   "\
+            .format(restaurant_id, item.id)
+        output += '''<a href='/restaurants/{}/{}/delete/'>Delete</a></br>'''\
             .format(restaurant_id, item.id)
         output += "</br>"
     # for new menu item POST

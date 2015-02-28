@@ -66,13 +66,8 @@ def deleteMenuItem(restaurant_id, menuitem_id):
     if request.method == 'GET':
         item_name = session.query(MenuItem).filter_by(id=menuitem_id)\
                                            .one().name
-        output = '''<form method='POST' enctype='multipart/form-data'\
-        action='/restaurants/{}/{}/delete/'>'''\
-            .format(restaurant_id, menuitem_id)
-        output += '''<h1>OK to delete item {}?</h1>'''.format(item_name)
-        output += '''<input type='submit' value='Submit'></br>'''
         return render_template('delete.html', restaurant_id=restaurant_id, \
-                               item_name=item_name)
+                               item_name=item_name, item_id=menuitem_id)
     elif request.method == 'POST':
         thisMenuItem = session.query(MenuItem)\
                               .filter_by(id=menuitem_id).one()
@@ -104,14 +99,7 @@ def listOfRestaurants():
 @app.route('/')
 @app.route('/hello')
 def HelloWorld():
-    output = ""
     items = session.query(MenuItem).all()
-    for item in items:
-        output += "{}</br>".format(item.name)
-        output += "Course: {}</br>".format(item.course)
-        output += "{}</br>".format(item.description)
-        output += "Price: {}</br>".format(item.price)
-        output += "</br>"
     return render_template('hello.html', items=items)
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request
+from flask import Flask, request, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -119,7 +119,7 @@ def restaurantMenu(restaurant_id):
     # for new menu item POST
     output += "<a href='/restaurants/{}/new/'>Create</a> new item</br>"\
         .format(restaurant_id)
-    return output
+    return render_template('menu.html', restaurant=restaurant, items=items)
 
 
 @app.route('/restaurants/')

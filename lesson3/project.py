@@ -103,22 +103,6 @@ def deleteMenuItem(restaurant_id, menuitem_id):
 def restaurantMenu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id)
-    output = ''
-    output += '<h1>{}</h1></br>'.format(restaurant.name)
-    for item in items:
-        output += "{}</br>".format(item.name)
-        output += "Course: {}</br>".format(item.course)
-        output += "{}</br>".format(item.description)
-        output += "Price: {}</br>".format(item.price)
-        # link to edit menu item page
-        output += "<a href='/restaurants/{}/{}/'>Edit</a>   "\
-            .format(restaurant_id, item.id)
-        output += '''<a href='/restaurants/{}/{}/delete/'>Delete</a></br>'''\
-            .format(restaurant_id, item.id)
-        output += "</br>"
-    # for new menu item POST
-    output += "<a href='/restaurants/{}/new/'>Create</a> new item</br>"\
-        .format(restaurant_id)
     return render_template('menu.html', restaurant=restaurant, items=items)
 
 

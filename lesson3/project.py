@@ -43,23 +43,6 @@ def newMenuItem(restaurant_id):
 def editMenuItem(restaurant_id, menuitem_id):
     if request.method == 'GET':
         thisMenuItem = session.query(MenuItem).filter_by(id=menuitem_id).one()
-        output = '''<form method='POST' enctype='multipar/form-data'\
-        action='/restaurants/{}/{}/'><h1>Prepare your dish!\
-        </h1>'''.format(restaurant_id, menuitem_id)
-        output += "<strong>Name</strong></br>"
-        output += '''<input name="name" value="{}" type='text'></br>'''\
-            .format(thisMenuItem.name)
-        output += "<strong>Description</strong></br>"
-        output += '''<input name="description" value="{}" type='text'></br>'''\
-            .format(thisMenuItem.description)
-        output += "<strong>Course</strong></br>"
-        output += '''<input name="course" type='text' value="{}"></br>'''\
-            .format(thisMenuItem.course)
-        output += "<strong>Price</strong></br>"
-        output += '''<input name="price" type='text' value="{}"></br>'''\
-            .format(thisMenuItem.price)
-        output += '''<input type='submit' value='Edit'></br>'''
-        output += '''<a href="/restaurants/{}">Back</a>'''.format(restaurant_id)
         return render_template('edit.html', restaurant_id=restaurant_id, \
                                item=thisMenuItem)
     elif request.method == 'POST':
@@ -88,7 +71,8 @@ def deleteMenuItem(restaurant_id, menuitem_id):
             .format(restaurant_id, menuitem_id)
         output += '''<h1>OK to delete item {}?</h1>'''.format(item_name)
         output += '''<input type='submit' value='Submit'></br>'''
-        return output
+        return render_template('delete.html', restaurant_id=restaurant_id, \
+                               item_name=item_name)
     elif request.method == 'POST':
         thisMenuItem = session.query(MenuItem)\
                               .filter_by(id=menuitem_id).one()

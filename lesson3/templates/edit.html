@@ -1,0 +1,22 @@
+<html>
+
+  <body>
+
+    <form method='POST' enctype='multipar/form-data'
+	  action='restaurants/{{restaurant_id}}/{{item.id}}/'>
+	    <h1>Prepare your dish</h1>
+      <strong>Name</strong></br>
+      <input name='name' value='{{item.name}}' type='text'></br>
+      <strong>Description</strong></br>
+      <input name='description' value='{{item.description}}' type='text'></br>
+      <strong>Course</strong></br>
+      <input name='course' value='{{item.course}}' type='text'></br>
+      <strong>Price</strong></br>
+      <input name='price' value='{{item.price}}' type='text'></br>
+      <input type='submit' value='Edit'></br>
+      <a href='/restaurants/{{restaurant_id}}/'>Back</a></br>
+
+    
+  </body>
+  
+</html>

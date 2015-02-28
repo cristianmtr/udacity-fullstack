@@ -60,7 +60,8 @@ def editMenuItem(restaurant_id, menuitem_id):
             .format(thisMenuItem.price)
         output += '''<input type='submit' value='Edit'></br>'''
         output += '''<a href="/restaurants/{}">Back</a>'''.format(restaurant_id)
-        return output
+        return render_template('edit.html', restaurant_id=restaurant_id, \
+                               item=thisMenuItem)
     elif request.method == 'POST':
         thisMenuItem = session.query(MenuItem).filter_by(id=menuitem_id).one()
         thisMenuItem.name = request.form['name']

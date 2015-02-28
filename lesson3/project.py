@@ -127,7 +127,7 @@ def HelloWorld():
         output += "{}</br>".format(item.description)
         output += "Price: {}</br>".format(item.price)
         output += "</br>"
-    return output
+    return render_template('hello.html', items=items)
 
 
 if __name__ == '__main__':

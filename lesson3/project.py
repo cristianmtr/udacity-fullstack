@@ -40,10 +40,9 @@ def editMenuItem(restaurant_id, menuitem_id):
         thisMenuItem.price = request.form['price']
         session.add(thisMenuItem)
         session.commit()
-        output = '''<h1>Your menu item has been edited!</h1>'''
-        output += '''Go <a href='/restaurants/{}/'>back</a>'''.\
-                  format(restaurant_id)
-        return output
+        flash("menu item has been edited!")
+        return redirect(url_for('restaurantMenu',
+                                restaurant_id=restaurant_id))
 
 
 # Task 3: Create a route for deleteMenuItem function here
@@ -61,10 +60,9 @@ def deleteMenuItem(restaurant_id, menuitem_id):
                               .filter_by(id=menuitem_id).one()
         session.delete(thisMenuItem)
         session.commit()
-        output = '''<h1>Item has been deleted</h1></br>'''
-        output += '''Go <a href='/restaurants/{}/'>Back</a>'''\
-            .format(restaurant_id)
-        return output
+        flash('item has been deleted')
+        return redirect(url_for('restaurantMenu',
+                                restaurant_id=restaurant_id))
 
 
 @app.route('/restaurants/<int:restaurant_id>/')

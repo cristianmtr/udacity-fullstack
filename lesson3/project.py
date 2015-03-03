@@ -13,11 +13,13 @@ def newMenuItem(restaurant_id):
         return render_template('new.html',
                                restaurant_id=restaurant_id)
     elif request.method == 'POST':
-        newMenuItem = MenuItem(name=request.form['name'],
-                               description=request.form['description'],
-                               course=request.form['course'],
-                               price=request.form['price'],
-                               restaurant_id=restaurant_id)
+        newMenuItem = MenuItem(
+            name=request.form['name'],
+            # description=request.form['description'],
+            # course=request.form['course'],
+            # price=request.form['price'],
+            # restaurant_id=restaurant_id
+        )
         session.add(newMenuItem)
         session.commit()
         flash('new menu item created!')
@@ -53,8 +55,12 @@ def deleteMenuItem(restaurant_id, menuitem_id):
     if request.method == 'GET':
         item_name = session.query(MenuItem).filter_by(id=menuitem_id)\
                                            .one().name
+        item = session.query(MenuItem).filter_by(id=menuitem_id)\
+                                           .one()
         return render_template('delete.html', restaurant_id=restaurant_id, \
-                               item_name=item_name, item_id=menuitem_id)
+                               item=item,
+                               item_name=item_name,
+                               item_id=menuitem_id)
     elif request.method == 'POST':
         thisMenuItem = session.query(MenuItem)\
                               .filter_by(id=menuitem_id).one()

@@ -1,22 +1,28 @@
 <html>
-  
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
 <body>
 
-      <form method='POST' enctype='multipar/form-data'
-	  action='/restaurants/{{restaurant_id}}/new/'>
-	    <h1>Prepare your new dish</h1>
-      <strong>Name</strong></br>
-      <input name='name' type='text'></br>
-      <strong>Description</strong></br>
-      <input name='description' type='text'></br>
-      <strong>Course</strong></br>
-      <input name='course' type='text'></br>
-      <strong>Price</strong></br>
-      <input name='price' type='text'></br>
-      <input type='submit' value='Submit'></br>
-      <a href='/restaurants/{{restaurant_id}}/'>Back</a></br>
+<h1>New Menu Item</h1>
 
+<div class = 'pane'>
+<form action="{{ url_for('newMenuItem', restaurant_id=restaurant_id )}}" method = 'post'>
+
+<dl>
+	<dt>Name:</dt>
+		<dd><input type ='text' size='30' name='name'></dd>
+</dl>
+
+
+<input type='submit' value='Create'>
+
+</form>
+</div>
 
 </body>
+
+
+
 
 </html>

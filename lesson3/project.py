@@ -10,19 +10,8 @@ app = Flask(__name__)
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
     if request.method == 'GET':
-        output = '''<form method='POST' enctype='multipar/form-data'\
-        action='/restaurants/{}/new/'><h1>Prepare your dish!\
-        </h1>'''.format(restaurant_id)
-        output += "<strong>Name</strong></br>"
-        output += '''<input name="name" type='text'></br>'''
-        output += "<strong>Description</strong></br>"
-        output += '''<input name="description" type='text'></br>'''
-        output += "<strong>Course</strong></br>"
-        output += '''<input name="course" type='text'></br>'''
-        output += "<strong>Price</strong></br>"
-        output += '''<input name="price" type='text'></br>'''
-        output += '''<input type='submit' value='Submit'></br>'''
-        return output
+        return render_template('new.html',
+                               restaurant_id=restaurant_id)
     elif request.method == 'POST':
         newMenuItem = MenuItem(name=request.form['name'],
                                description=request.form['description'],

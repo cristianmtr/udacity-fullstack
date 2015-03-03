@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, flash, url_for
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -20,11 +20,9 @@ def newMenuItem(restaurant_id):
                                restaurant_id=restaurant_id)
         session.add(newMenuItem)
         session.commit()
-        output = '''<h1>Your menu item has been created!</h1>'''
-        output += '''Go <a href='/restaurants/{}/'>back</a>'''.\
-                  format(restaurant_id)
-        return output
-
+        flash('new menu item created!')
+        return redirect(url_for('restaurantMenu',
+                                restaurant_id=restaurant_id))
 
 # Task 2: Create route for editMenuItem function here
 @app.route('/restaurants/<int:restaurant_id>/<int:menuitem_id>/',
@@ -100,5 +98,6 @@ if __name__ == '__main__':
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     #
+    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)

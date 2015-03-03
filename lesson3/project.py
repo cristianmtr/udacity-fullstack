@@ -15,10 +15,10 @@ def newMenuItem(restaurant_id):
     elif request.method == 'POST':
         newMenuItem = MenuItem(
             name=request.form['name'],
-            # description=request.form['description'],
-            # course=request.form['course'],
-            # price=request.form['price'],
-            # restaurant_id=restaurant_id
+            description=request.form['description'],
+            course=request.form['course'],
+            price=request.form['price'],
+            restaurant_id=restaurant_id
         )
         session.add(newMenuItem)
         session.commit()

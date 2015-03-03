@@ -10,44 +10,38 @@
 
 <dl>
 	<dt>Name:</dt>
-		<dd><input type ='text' size='30' name='name' placeholder = '{{item.name }}'></dd>
+	<dd><input type ='text' size='30' name='name' value = '{{item.name }}'></dd>
+	
 	<dt>Description:</dt>
-		<dd><textarea name = 'description' rows='5' cols='40' placeholder = '{{item.description }}'></textarea></dd>
+	<dd><textarea id="mine" name='description' rows='5' cols='40'>{{item.description}}</textarea></dd>
 	<dt>Price:</dt>
-		<dd><input type = 'text' size = '8' name='price' placeholder = '{{item.price}}'></dd>
+	<dd><input type = 'text' size = '8' name='price' value = '{{item.price}}'></dd>
+	
 	<dt>Course:</dt>
-
+	<!-- here be crazy -->
 	{% if item.course == 'Appetizier' %}
-		<dd><input type ='radio' name='course' value='Appetizer'checked >Appetizer</dd>
+	<dd><input type ='radio' name='course' value='Appetizer'checked >Appetizer</dd>
 	{%else%}
 	<dd><input type ='radio' name='course' value='Appetizer' >Appetizer</dd>
-    {% endif %}
+	{% endif %}
 
-    {% if item.course == 'Entree' %}
-       <dd><input type ='radio' name='course' value='Entree' checked>Entree</dd>
-
-    {%else%}
-		<dd><input type ='radio' name='course' value='Entree'>Entree</dd>
-    {% endif %}
+	{% if item.course == 'Entree' %}
+	<dd><input type ='radio' name='course' value='Entree' checked>Entree</dd>
+	{%else%}
+	<dd><input type ='radio' name='course' value='Entree'>Entree</dd>
+	{% endif %}
 
 	{% if item.course == 'Dessert'%}
-		<dd><input type ='radio' name='course' value='Dessert'checked >Dessert</dd>
-
+	<dd><input type ='radio' name='course' value='Dessert'checked >Dessert</dd>
 	{% else %}
-	   <dd><input type ='radio' name='course' value='Dessert'>Dessert</dd>
-
+	<dd><input type ='radio' name='course' value='Dessert'>Dessert</dd>
 	{% endif %}
-
 
 	{%if item.course =='Beverage'%}
-		<dd><input type ='radio' name='course' value='Beverage'checked >Beverage</dd>
+	<dd><input type ='radio' name='course' value='Beverage'checked >Beverage</dd>
 	{% else %}
-		<dd><input type ='radio' name='course' value='Beverage'>Beverage</dd>
+	<dd><input type ='radio' name='course' value='Beverage'>Beverage</dd>
 	{% endif %}
-
-
-
-
 
 </dl>
 
@@ -55,6 +49,9 @@
 <input type='submit' value='Edit'>
 
 <a href = '{{url_for('restaurantMenu', restaurant_id = restaurant_id)}}'> Cancel </a>
+
 </form>
+
 </body>
+	
 </html>

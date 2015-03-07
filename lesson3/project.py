@@ -88,7 +88,7 @@ def restaurantMenu(restaurant_id):
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id)
     return render_template('menu.html', restaurant=restaurant, items=items)
 
-
+@app.route('/')
 @app.route('/restaurants/')
 def listOfRestaurants():
     restaurants = session.query(Restaurant)
@@ -97,13 +97,6 @@ def listOfRestaurants():
         output += '''<a href='/restaurants/{}/'>{}</a></br>'''\
             .format(i.id, i.name)
     return output
-
-
-@app.route('/')
-@app.route('/hello')
-def HelloWorld():
-    items = session.query(MenuItem).all()
-    return render_template('hello.html', items=items)
 
 
 if __name__ == '__main__':

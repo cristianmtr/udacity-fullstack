@@ -1,10 +1,21 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request, render_template, redirect, flash, url_for
+from flask import Flask, request, render_template, redirect, flash, url_for, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 app = Flask(__name__)
 
+# JSON endpoint for full menu for a particular restaurant
+@app.route('/restaurants/<int:restaurant_id>/JSON')
+def restaurantMenuJSON(restaurant_id):
+    items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+# JSON endpoint for full menu for a particular menu item
+@app.route('/restaurants/<int:restaurant_id>/<int:menuitem_id>/JSON')
+def menuItemJSON(restaurant_id, menuitem_id):
+    menuitem = session.query(MenuItem).filter_by(id = menuitem_id).one()
+    return jsonify(menuitem.serialize)
 
 # Task 1: Create route for newMenuItem function here
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])

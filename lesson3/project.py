@@ -1,3 +1,4 @@
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, redirect, flash, url_for, jsonify
 from sqlalchemy import create_engine
